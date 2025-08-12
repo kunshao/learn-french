@@ -49,7 +49,6 @@ struct FrenchArticle {
     let title: String
     let content: String
     let vocabularyNotes: String
-    let timestamp: Date
 }
 ```
 

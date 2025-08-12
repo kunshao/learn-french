@@ -13,26 +13,44 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                // Header
-                VStack(spacing: 8) {
-                    Image(systemName: "book.fill")
-                        .font(.system(size: 40))
-                        .foregroundColor(.blue)
-                    
-                    Text("Learn French")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+            VStack(spacing: 0) {
+                // Compact Header
+                VStack(spacing: 4) {
+                    HStack {
+                        Image(systemName: "book.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(.blue)
+                        
+                        Text("Learn French")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            Task {
+                                await articleService.generateNewArticle()
+                            }
+                        }) {
+                            Image(systemName: "wand.and.stars")
+                                .font(.system(size: 16))
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(articleService.isLoading ? Color.gray : Color.blue)
+                                .cornerRadius(8)
+                        }
+                        .disabled(articleService.isLoading)
+                    }
                     
                     Text("A2 Level Articles")
-                        .font(.subheadline)
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                .padding(.top, 20)
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+                .padding(.bottom, 4)
                 
-                Spacer()
-                
-                // Article Display
+                // Article Display - Maximized
                 if articleService.isLoading {
                     VStack(spacing: 16) {
                         ProgressView()
@@ -41,39 +59,27 @@ struct ContentView: View {
                             .font(.headline)
                             .foregroundColor(.secondary)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let article = articleService.currentArticle {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 20) {
-                            // Title
-                            Text(article.title)
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(.primary)
-                            
-
-                            
-                            // Content
-                            DuoStyleReader(
-                                text: article.content,
-                                translate: { word in
-                                    await translationService.translate(word)
-                                }
-                            )
-                            .frame(minHeight: 100)
-                            
-
-                            
-                            // Timestamp
-                            Text("Generated: \(article.formattedDate)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding()
+                    VStack(alignment: .leading, spacing: 0) {
+                        // Title - Compact
+                        Text(article.title)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 8)
+                        
+                        // Content - Maximized
+                        DuoStyleReader(
+                            text: article.content,
+                            translate: { word in
+                                await translationService.translate(word)
+                            }
+                        )
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .background(Color(.systemBackground))
-                    .cornerRadius(12)
-                    .shadow(radius: 2)
-                    .padding(.horizontal)
                 } else {
                     // Empty State
                     VStack(spacing: 16) {
@@ -85,36 +91,14 @@ struct ContentView: View {
                             .font(.title2)
                             .fontWeight(.semibold)
                         
-                        Text("Tap the button below to generate your first French A2 article")
+                        Text("Tap the button above to generate your first French A2 article")
                             .font(.body)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                
-                Spacer()
-                
-                // Generate Button
-                Button(action: {
-                    Task {
-                        await articleService.generateNewArticle()
-                    }
-                }) {
-                    HStack {
-                        Image(systemName: "wand.and.stars")
-                        Text("Generate New Article")
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(articleService.isLoading ? Color.gray : Color.blue)
-                    .cornerRadius(12)
-                }
-                .disabled(articleService.isLoading)
-                .padding(.horizontal)
-                .padding(.bottom, 20)
             }
             .navigationBarHidden(true)
         }

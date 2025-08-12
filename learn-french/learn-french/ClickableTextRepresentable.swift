@@ -26,7 +26,7 @@ final class ClickableTextView: UITextView, UITextViewDelegate {
     private func makeLinkedAttributedString(_ text: String) -> NSAttributedString {
         // Tokenize and add a custom URL per word; spaces/punct kept raw
         let full = NSMutableAttributedString(string: text, attributes: [
-            .font: UIFont.preferredFont(forTextStyle: .body)
+            .font: UIFont.preferredFont(forTextStyle: .title2)
         ])
         let ns = text as NSString
         wordRegex.enumerateMatches(in: text, options: [], range: NSRange(location: 0, length: ns.length)) { m, _, _ in

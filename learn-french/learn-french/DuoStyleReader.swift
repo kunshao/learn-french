@@ -49,7 +49,9 @@ struct DuoStyleReader: View {
                 .animation(.spring(response: 0.25, dampingFraction: 0.9), value: showBubble)
             }
         }
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
         .onTapGesture {
             // tap outside to dismiss
             if showBubble { showBubble = false }
