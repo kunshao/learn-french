@@ -50,14 +50,7 @@ struct ContentView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(.primary)
                             
-                            // Tap instruction
-                            Text("💡 Tap any word to see its translation")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(Color.blue.opacity(0.1))
-                                .cornerRadius(16)
+
                             
                             // Content
                             DuoStyleReader(
@@ -68,21 +61,7 @@ struct ContentView: View {
                             )
                             .frame(minHeight: 100)
                             
-                            // Vocabulary Notes
-                            if !article.vocabularyNotes.isEmpty {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Vocabulary Notes")
-                                        .font(.headline)
-                                        .foregroundColor(.blue)
-                                    
-                                    Text(article.vocabularyNotes)
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                        .padding()
-                                        .background(Color.blue.opacity(0.1))
-                                        .cornerRadius(8)
-                                }
-                            }
+
                             
                             // Timestamp
                             Text("Generated: \(article.formattedDate)")
