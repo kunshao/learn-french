@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var articleService = ArticleService()
+    @StateObject private var translationService = TranslationService()
     
     var body: some View {
         NavigationView {
@@ -49,11 +50,23 @@ struct ContentView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(.primary)
                             
+                            // Tap instruction
+                            Text("💡 Tap any word to see its translation")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.blue.opacity(0.1))
+                                .cornerRadius(16)
+                            
                             // Content
-                            Text(article.content)
-                                .font(.body)
-                                .lineSpacing(6)
-                                .foregroundColor(.primary)
+                            DuoStyleReader(
+                                text: article.content,
+                                translate: { word in
+                                    await translationService.translate(word)
+                                }
+                            )
+                            .frame(minHeight: 100)
                             
                             // Vocabulary Notes
                             if !article.vocabularyNotes.isEmpty {
