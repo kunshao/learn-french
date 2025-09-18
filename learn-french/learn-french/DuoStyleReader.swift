@@ -65,14 +65,25 @@ struct DuoStyleReader: View {
     /// Keeps the bubble on-screen (simple clamp + flip below if near top).
     private func adjustedAnchor(rect: CGRect, in container: CGSize) -> CalloutAnchor {
         let padding: CGFloat = 8
-        let preferred = CGPoint(x: rect.midX, y: rect.minY)
-        var point = preferred
+        
+        // Position bubble directly adjacent to the word
+        let preferredX = rect.midX
+        let preferredY: CGFloat
+        
+        // If too close to the top, show below the word
+        let showBelow = rect.minY < 60
+        if showBelow {
+            // Position below the word with minimal gap
+            preferredY = rect.maxY + 1
+        } else {
+            // Position above the word with minimal gap
+            preferredY = rect.minY - 1
+        }
+        
+        var point = CGPoint(x: preferredX, y: preferredY)
 
         // horizontal clamp
         point.x = max(padding, min(container.width - padding, point.x))
-
-        // If too close to the top, flip arrow to point downward
-        let showBelow = rect.minY < 60
 
         return CalloutAnchor(
             point: point,
